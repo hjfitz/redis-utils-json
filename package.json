@@ -1,0 +1,34 @@
+{
+  "name": "redis-utils-json",
+  "version": "0.0.1",
+  "description": "Handy dandy redis utilities for JSON on the web",
+  "main": "dist/index.js",
+  "repository": "git@github.com:hjfitz/redis-utils-json.git",
+  "author": "Harry <hfitz83@gmail.com>",
+  "license": "GPL-3.0",
+  "private": true,
+  "devDependencies": {
+    "@types/node": "^9.3.0",
+    "@types/redis": "^2.8.4",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.16.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.5.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.0",
+    "gulp-sourcemaps": "^2.6.3",
+    "gulp-typescript": "^4.0.0-alpha.1",
+    "merge2": "^1.2.1",
+    "typescript": "^2.6.2"
+  },
+  "scripts": {
+    "build": "tsc --pretty"
+  },
+  "dependencies": {
+    "redis": "^2.8.0"
+  }
+}
