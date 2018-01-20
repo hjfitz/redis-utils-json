@@ -17,7 +17,7 @@ gulp.task('build', () => {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('doc', (cb) => {
+gulp.task('docs', (cb) => {
   gulp.src(['./dist/*.js']).pipe(jsdoc(jsdocConfig, cb));
 });
 
@@ -30,4 +30,4 @@ gulp.task('watch', () => {
  * When Gulp is run, we want to transpile it and generate the docs
  * We then watch for any changes.
  */
-gulp.task('default', ['build', 'doc']);
+gulp.task('default', ['build', 'docs']);

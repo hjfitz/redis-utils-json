@@ -1,6 +1,8 @@
 # JSON Utils for Redis
 > Storing data on your server has never been so easy
 
+**developer docs**: [github pages](https://hjfitz.github.io/redis-utils-json/)
+
 # Intro
 Redis is great, but callback based libraries aren't. I created this library because I work with a lot os JSON responses, and I like to store thise in Redis. Redis is SUPER fast. If you're using Node >6.10, this is the library for you.
 
