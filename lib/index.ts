@@ -9,7 +9,7 @@ interface Stored {
 // list of keys
 interface ReturnedKeys {
   found: boolean;
-  data: string[];
+  keys: string[];
 }
 
 // current status
@@ -32,6 +32,8 @@ class Redis {
     this._url = url;
     this._connected = false;
     this._client.addListener('connect', () => this._connected = true);
+    // needed to use 'this' within getByKeys
+    this.getByKey = this.getByKey.bind(this);
   }
 
   get status(): Status {
@@ -92,10 +94,10 @@ class Redis {
     return new Promise((resolve, reject) => {
       this._client.keys(prefix, (err, replies) => {
         if (err) return reject(err);
-        const ret: ReturnedKeys = { found: false, data: [] };
+        const ret: ReturnedKeys = { found: false, keys: [] };
         if (replies) {
-          ret.found = true;
-          ret.data = replies;
+          ret.found = replies.length !== 0;
+          ret.keys = replies;
         }
         resolve(ret);
       });

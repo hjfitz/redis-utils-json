@@ -25,18 +25,19 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const redis_1 = require("redis");
-;
+const redis = require("redis");
 class Redis {
     /**
      * Create a promisified wrapper around Redis
      * @param url Where redis is mounted
      */
     constructor(url) {
-        this._client = redis_1.default.createClient(url);
+        this._client = redis.createClient(url);
         this._url = url;
         this._connected = false;
         this._client.addListener('connect', () => this._connected = true);
+        // needed to use 'this' within getByKeys
+        this.getByKey = this.getByKey.bind(this);
     }
     get status() {
         return {
@@ -92,10 +93,10 @@ class Redis {
         return new Promise((resolve, reject) => {
             this._client.keys(prefix, (err, replies) => {
                 if (err) return reject(err);
-                const ret = { found: false, data: [] };
+                const ret = { found: false, keys: [] };
                 if (replies) {
-                    ret.found = true;
-                    ret.data = replies;
+                    ret.found = replies.length !== 0;
+                    ret.keys = replies;
                 }
                 resolve(ret);
             });
@@ -137,5 +138,6 @@ class Redis {
         });
     }
 }
+// allow for nicer importing
 module.exports = Redis;
 //# sourceMappingURL=index.js.map
