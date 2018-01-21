@@ -2,20 +2,20 @@ import * as redis from 'redis';
 
 // piece of data stored in redis
 interface Stored {
-  found: boolean,
-  data: any,
-};
+  found: boolean;
+  data: any;
+}
 
 // list of keys
 interface ReturnedKeys {
-  found: boolean,
+  found: boolean;
   data: string[];
 }
 
 // current status
 interface Status {
-  connected: Boolean,
-  mounted: string,
+  connected: Boolean;
+  mounted: string;
 }
 
 class Redis {
@@ -80,7 +80,7 @@ class Redis {
    * Asynchronously get a load of data from redis
    * @param keys Any number of keys to retrieve
    */
-  getByKeys(...keys: string[]): Promise<Array<object>> {
+  getByKeys(...keys: string[]): Promise<object[]> {
     return Promise.all(keys.map(this.getByKey));
   }
 
@@ -121,7 +121,7 @@ class Redis {
    */
   async lazyCache(key: string, callback: Function): Promise<any> {
     const { data, found }: Stored = await this.getByKey(key);
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       if (found) {
         resolve(data);
         // by not awaiting, we're not blocking the software
@@ -129,7 +129,7 @@ class Redis {
       } else {
         // tricky. get fresh data and resolve the *original* promise
         // then, set the key
-        callback().then(fresh => {
+        callback().then((fresh) => {
           resolve(fresh);
           this.setKey(key, fresh);
         });
