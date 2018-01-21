@@ -1,4 +1,4 @@
-import redis, { RedisClient } from 'redis';
+import * as redis from 'redis';
 
 // piece of data stored in redis
 interface Stored {
@@ -18,8 +18,8 @@ interface Status {
   mounted: string,
 }
 
-export default class Redis {
-  _client: RedisClient;
+class Redis {
+  _client: redis.RedisClient;
   _url: string;
   _connected: Boolean; 
 
@@ -137,3 +137,6 @@ export default class Redis {
     });
   }
 }
+
+// allow for nicer importing
+module.exports = Redis;

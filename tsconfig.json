@@ -4,6 +4,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "outDir": "dist",
+    "module": "CommonJS",
     "moduleResolution": "node"
   },
   "exclude": [

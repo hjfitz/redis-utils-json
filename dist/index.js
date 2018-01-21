@@ -1,14 +1,4 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _redis = require('redis');
-
-var _redis2 = _interopRequireDefault(_redis);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+"use strict";
 
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,7 +24,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-
+Object.defineProperty(exports, "__esModule", { value: true });
+const redis_1 = require("redis");
 ;
 class Redis {
     /**
@@ -42,7 +33,7 @@ class Redis {
      * @param url Where redis is mounted
      */
     constructor(url) {
-        this._client = _redis2.default.createClient(url);
+        this._client = redis_1.default.createClient(url);
         this._url = url;
         this._connected = false;
         this._client.addListener('connect', () => this._connected = true);
@@ -146,5 +137,5 @@ class Redis {
         });
     }
 }
-exports.default = Redis;
+module.exports = Redis;
 //# sourceMappingURL=index.js.map
