@@ -42,7 +42,16 @@ class Redis {
      * @param url Where redis is mounted
      */
     constructor(url) {
-        this.client = _redis2.default.createClient(url);
+        this._client = _redis2.default.createClient(url);
+        this._url = url;
+        this._connected = false;
+        this._client.addListener('connect', () => this._connected = true);
+    }
+    get status() {
+        return {
+            connected: this._connected,
+            mounted: this._url
+        };
     }
     /**
      * Set a key-stringified-value pair in ur store
@@ -54,24 +63,35 @@ class Redis {
             // if we just want to store a value, don't bother adding a key
             if (!Array.isArray(value)) Object.assign(value, { key });
             const serialised = JSON.stringify(value);
-            this.client.set(key, serialised, (err, reply) => {
+            this._client.set(key, serialised, (err, reply) => {
                 if (err) return reject(err);
                 resolve(reply);
             });
         });
     }
+    /**
+     * Get data from redis and parse to JSON
+     * @param key data stored by this key
+     */
     getByKey(key) {
         return new Promise((resolve, reject) => {
-            this.client.get(key, (err, reply) => {
+            this._client.get(key, (err, reply) => {
                 if (err) return reject(err);
                 const ret = { found: false, data: '' };
                 if (reply) {
                     ret.found = true;
-                    ret.data = reply;
+                    ret.data = JSON.parse(reply);
                 }
                 resolve(ret);
             });
         });
+    }
+    /**
+     * Asynchronously get a load of data from redis
+     * @param keys Any number of keys to retrieve
+     */
+    getByKeys(...keys) {
+        return Promise.all(keys.map(this.getByKey));
     }
     /**
      * Promise wrapper to get corresponding keys from Redis
@@ -79,7 +99,7 @@ class Redis {
      */
     getKeys(prefix = '') {
         return new Promise((resolve, reject) => {
-            this.client.keys(prefix, (err, replies) => {
+            this._client.keys(prefix, (err, replies) => {
                 if (err) return reject(err);
                 const ret = { found: false, data: [] };
                 if (replies) {
@@ -95,7 +115,7 @@ class Redis {
      * @param {string} key key to remove from redis
      */
     deleteKey(key) {
-        return new Promise(resolve => this.client.del(key, resolve));
+        return new Promise(resolve => this._client.del(key, resolve));
     }
     /**
      * lazy caching
@@ -103,7 +123,7 @@ class Redis {
      * Not found? get fresh data, and then add it to the cache
      * Promises don't exit upon resolve
      *  -- JavaScript only does this when it throws an error, or returns something
-     * @param {function} callback function to get data
+     * @param {function} callback MUST BE A FUNCTION THAT RETURNS A PROMISE. function to get data
      * @param {string} key used to set and retrieve data from redis
      */
     lazyCache(key, callback) {
