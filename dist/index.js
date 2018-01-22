@@ -38,6 +38,7 @@ class Redis {
         this._client.addListener('connect', () => this._connected = true);
         // needed to use 'this' within getByKeys
         this.getByKey = this.getByKey.bind(this);
+        this.deleteKey = this.deleteKey.bind(this);
     }
     get status() {
         return {
@@ -83,13 +84,13 @@ class Redis {
      * @param keys Any number of keys to retrieve
      */
     getByKeys(...keys) {
-        return Promise.all(keys.map(this.getByKey));
+        return Promise.all(keys.map(this.getByKey)).then(result => result.filter(res => res.found));
     }
     /**
      * Promise wrapper to get corresponding keys from Redis
      * @param {string} key Key prefix for Redis
      */
-    getKeys(prefix = '') {
+    getKeys(prefix = '*') {
         return new Promise((resolve, reject) => {
             this._client.keys(prefix, (err, replies) => {
                 if (err) return reject(err);
@@ -108,6 +109,13 @@ class Redis {
      */
     deleteKey(key) {
         return new Promise(resolve => this._client.del(key, resolve));
+    }
+    /**
+     * maps deletekey over keys
+     * @param keys keys to delete
+     */
+    deleteKeys(...keys) {
+        return Promise.all(keys.map(this.deleteKey));
     }
     /**
      * lazy caching
