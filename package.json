@@ -1,6 +1,6 @@
 {
   "name": "redis-utils-json",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Handy dandy redis utilities for JSON on the web",
   "main": "dist/index.js",
   "repository": "git@github.com:hjfitz/redis-utils-json.git",
